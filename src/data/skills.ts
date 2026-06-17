@@ -1,0 +1,21 @@
+export const skills = [
+  'HTML',
+  'CSS',
+  'JavaScript',
+  'TypeScript',
+  'React',
+  'Next.js',
+  'Node.js',
+  'Python',
+  'Tailwind CSS',
+  'n8n',
+  'Git',
+  'GitHub',
+  'UI/UX',
+  'Comunicação',
+  'Resolução de Problemas',
+  'Criatividade',
+  'Organização',
+  'Aprendizado Rápido',
+  'Suporte Técnico'
+]
