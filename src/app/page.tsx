@@ -5,17 +5,37 @@ import { useState, useEffect } from 'react'
 import PhaserCanvas from '../components/PhaserCanvas'
 import HUD from '../components/HUD'
 import { Modal } from '../components/Modals'
+import { skills } from '../data/skills'
 
 const App: React.FC = ()=>{
   const [started, setStarted] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [stackOpen, setStackOpen] = useState(false);
+  const [currentStack, setCurrentStack] = useState<string | null>(null);
 
   useEffect(()=>{
     function handleKey(e:KeyboardEvent){
-      if(e.key === 'Escape') setAboutOpen(false);
+      if(e.key === 'Escape'){
+        setAboutOpen(false);
+        setStackOpen(false);
+      }
     }
     window.addEventListener('keydown', handleKey);
-    return ()=>window.removeEventListener('keydown', handleKey);
+
+    function onOpenStack(e:any){
+      const skill = e.detail?.skill;
+      if(skill){
+        setCurrentStack(skill);
+        setStackOpen(true);
+      }
+    }
+
+    window.addEventListener('openStack', onOpenStack as EventListener);
+
+    return ()=>{
+      window.removeEventListener('keydown', handleKey);
+      window.removeEventListener('openStack', onOpenStack as EventListener);
+    }
   },[])
 
   function startJourney(){
@@ -44,6 +64,16 @@ const App: React.FC = ()=>{
 
       <Modal title="Quem sou eu?" open={aboutOpen} onClose={()=>setAboutOpen(false)}>
         <p>Sou Lucas Dias, estudante de Engenharia de Software, Suporte de TI e desenvolvedor apaixonado por criar experiências digitais criativas, úteis e bem construídas. Tenho interesse em desenvolvimento web, automações, design de interfaces e cibersegurança.</p>
+      </Modal>
+
+      <Modal title={currentStack ?? 'Tecnologia'} open={stackOpen} onClose={()=>setStackOpen(false)}>
+        <p>{currentStack ? `${currentStack}: descrição curta e exemplo de uso.` : 'Selecione uma tecnologia.'}</p>
+        <div className="mt-3">
+          <strong>Lista de tecnologias:</strong>
+          <ul className="list-disc ml-5 text-sm mt-2">
+            {skills.slice(0,12).map((s)=> <li key={s}>{s}</li>)}
+          </ul>
+        </div>
       </Modal>
 
     </main>
